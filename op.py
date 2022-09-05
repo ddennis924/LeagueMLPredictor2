@@ -38,6 +38,10 @@ def rankbot_activation():
     players = []
     for p in summoners:
         players.append(p.get())
+    print(players)
+    for e in entries:
+        print(e.get())
+    print(legend)
     ms = list((0,0,0,0,0))
     r = list((0,0,0,0,0))
     t = list((0,0,0,0,0))
@@ -48,13 +52,10 @@ def rankbot_activation():
     for p in range(5):
         player = None
         playerName = players[p]
-        try:
-            if int(players[p]) < 6:
-                player = watcher.summoner.by_name(my_region,legend[p])
-                playerName = legend[p]
-            else:
-                player = watcher.summoner.by_name(my_region,players[p])
-        except:
+        if int(players[p]) < 6:
+            player = watcher.summoner.by_name(my_region,legend[int(players[p])])
+            playerName = legend[int(players[p])]
+        else:
             player = watcher.summoner.by_name(my_region,players[p])
         sid = player['id']
         level[p] = player['summonerLevel']
@@ -83,7 +84,7 @@ def rankbot_activation():
         soup = BeautifulSoup(source, "html.parser")
         ugg = soup.find('body').find('div', {'id': 'root'}).find('div', {'class': 'desktop-container router-container'}).find('div', {'id': 'page-content'}).find('div', {'style': 'width:100%'}).find('div', {'id': 'main-content'}).find('div', {'id': 'content-wrapper'}).find('div', {'id': 'content'}).find('div', {'class': 'summoner-profile-page'}).find('div', {'class': 'summoner-profile-container content-side-padding'}).find('div', {'class': 'summoner-profile_content-container'}).find('div', {'class': 'summoner-profile_champion-stats'}).find('div', {'class': 'content-section ReactTable ugg-table-2 profile-champion-stats-table'}).find('div', {'class': 'rt-tbody'}).find_all('div', {'class': 'rt-tr-group'})
         for d in ugg:
-            if d.find('div', {'class': 'rt-tr'}).find('div', {'class': 'champion-cell'}).find('a').find('span').getText() == entries[p].get():
+            if d.find('div', {'class': 'rt-tr'}).find('div', {'class': 'champion-cell'}).find('a').find('span').getText() == champions[entries[p].get()]['name']:
                 temp = d.find('div', {'class': 'rt-tr'}).find('div', {'class': 'win-rate-cell'}).find('div').find('span', {'class': 'match-record'}).getText()
                 temp = float(temp[0: str(temp).find('W')]) + float(temp[str(temp).find('W') + 2: str(temp).find('L')])
                 cTotal[p] = temp
